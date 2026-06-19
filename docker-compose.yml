@@ -1,0 +1,41 @@
+services:
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ballcom
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+
+  order:
+    build:
+      context: .
+      dockerfile: apps/order/Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  shipping:
+    build:
+      context: .
+      dockerfile: apps/shipping/Dockerfile
+    ports:
+      - '3002:3002'
+    environment:
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+    depends_on:
+      - rabbitmq
+      - postgres
