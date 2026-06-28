@@ -4,6 +4,12 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   postgres:
     image: postgres:16-alpine
@@ -21,11 +27,12 @@ services:
     ports:
       - '3001:3001'
     environment:
+      PORT: 3001
       RABBITMQ_URL: amqp://rabbitmq
       DB_HOST: postgres
     depends_on:
-      - rabbitmq
-      - postgres
+      rabbitmq:
+        condition: service_healthy
 
   shipping:
     build:

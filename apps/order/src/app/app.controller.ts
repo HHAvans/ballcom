@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateOrderDto } from '@org/models';
-import { OrderPublisher } from '@org/rabbitmq'
+import { OrderPublisher } from './orderpublisher'
 
-@Controller()
+@Controller("order")
 export class AppController {
   constructor(private readonly appService: AppService, private readonly publisher: OrderPublisher) {}
 

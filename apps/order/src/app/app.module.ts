@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RabbitMqModule } from '@org/rabbitmq';
+import { OrderPublisher } from './orderpublisher';
 
 @Module({
-  imports: [],
+  imports: [RabbitMqModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, OrderPublisher],
 })
 export class AppModule {}
