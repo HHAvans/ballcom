@@ -5,34 +5,15 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "executor": "nx:run-commands",
       "options": {
-        "platform": "node",
-        "outputPath": "dist/apps/shipping",
-        "format": ["cjs"],
-        "bundle": false,
-        "main": "apps/shipping/src/main.ts",
-        "tsConfig": "apps/shipping/tsconfig.app.json",
-        "assets": ["apps/shipping/src/assets"],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          }
-        }
+        "command": "webpack-cli build",
+        "args": ["--node-env=production"],
+        "cwd": "apps/shipping"
       },
       "configurations": {
-        "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
+        "development": {
+          "args": ["--node-env=development"]
         }
       }
     },
@@ -80,5 +61,5 @@
       }
     }
   },
-  "tags": []
+  "tags": ["type:app"]
 }

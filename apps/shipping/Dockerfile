@@ -5,7 +5,6 @@ WORKDIR /app
 COPY . .
 
 RUN npm install
-
 RUN npx nx build shipping
 
 FROM node:22-alpine
@@ -14,6 +13,8 @@ WORKDIR /app
 
 COPY --from=builder /app/dist/apps/shipping .
 
-EXPOSE 3002
+RUN npm install --omit=dev
+
+EXPOSE 3001
 
 CMD ["node", "main.js"]

@@ -41,6 +41,7 @@ services:
     ports:
       - '3002:3002'
     environment:
+      PORT: 3002
       RABBITMQ_URL: amqp://rabbitmq
       DB_HOST: postgres
     depends_on:

@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import * as amqp from 'amqplib'
 
+// This class handles the connection with the rabbitmq service. Retries every 5s because sometimes when a rabbitmq start up and the service that uses it is tries to connect it fails because rabbitmq is somehow not ready yet.
+// This will just keep looping until a connection is found, in which case the created channel is given to the classes (consumer and publisher)
 @Module({
   providers: [
     {
