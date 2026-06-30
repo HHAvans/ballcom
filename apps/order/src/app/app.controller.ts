@@ -14,6 +14,7 @@ export class AppController {
     await this.publisher.orderReleased({
       orderId: order.id,
       customerId: dto.customerId,
+      amount: dto.amount ?? 0,
       createdAt: new Date().toISOString(),
     });
 
