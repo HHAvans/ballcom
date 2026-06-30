@@ -70,14 +70,35 @@ services:
       postgres:
         condition: service_started
 
+  payment:
+    build:
+      context: .
+      dockerfile: apps/payment/Dockerfile
+    ports:
+      - '3004:3004'
+    environment:
+      PORT: 3004
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      PAYMENT_EVENT_DB_NAME: payment_events_db
+      PAYMENT_READ_DB_NAME: payment_read_db
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+
   supplier:
     build:
       context: .
       dockerfile: apps/supplier/Dockerfile
     ports:
-      - '3004:3004'
+      - '3006:3006'
     environment:
-      PORT: 3004
+      PORT: 3006
       RABBITMQ_URL: amqp://rabbitmq
       DB_HOST: postgres
       DB_PORT: 5432

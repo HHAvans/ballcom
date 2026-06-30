@@ -6,6 +6,7 @@ export interface ShipmentCreatedEvent {
 
 export interface OrderReleasedEvent {
   orderId: string;
+  amount: number;
   customerId: string;
   createdAt: string;
 }
