@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RabbitMqModule } from '@org/rabbitmq';
+import { ProductCatalogController } from './productcatalog.controller';
 import { Product } from './product.entity';
 import { ProductCatalogService } from './productcatalog.service';
 import { ProductPublisher } from './product.publisher';
-import { SupplierConsumer } from './supplier.consumer';
+import { SupplierCreateConsumer } from './supplier.create.consumer';
+import { SupplierDeleteConsumer } from './supplier.delete.consumer';
 
 
 @Module({
@@ -25,7 +27,9 @@ import { SupplierConsumer } from './supplier.consumer';
   providers: [
     ProductCatalogService,
     ProductPublisher,
-    SupplierConsumer,
+    SupplierCreateConsumer,
+    SupplierDeleteConsumer,
   ],
+  controllers: [ProductCatalogController],
 })
 export class ProductCatalogModule {}

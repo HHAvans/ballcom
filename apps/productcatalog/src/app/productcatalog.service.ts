@@ -29,4 +29,20 @@ export class ProductCatalogService {
 
     return product;
   }
+
+  async deleteProduct(supplier: any) {
+    const product = await this.productRepository.findOneBy({
+      productId: supplier.productId,
+      supplierId: supplier.supplierId,
+    });
+    if (product) {
+      await this.productRepository.remove(product);
+      await this.publisher.productDeleted(product);
+      console.log(`Product with ID ${product.productId} deleted successfully.`);
+    }
+  }
+
+  async findAllProducts() {
+    return this.productRepository.find();
+  }
 }

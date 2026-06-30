@@ -12,4 +12,10 @@ export class ProductPublisher extends RabbitPublisher {
       event,
     );
   }
+  async productDeleted(event: any) {
+    await this.publish(
+      'product.deleted',
+      event,
+    );
+  }
 }

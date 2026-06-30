@@ -12,7 +12,13 @@ export interface OrderReleasedEvent {
 
 export interface SupplierProductProposedEvent {
   productId: string;
+  supplierId: string;
   productName: string;
   description: string;
   price: number;
+}
+
+export interface SupplierProductDeletedEvent {
+  productId: string;
+  supplierId: string;
 }

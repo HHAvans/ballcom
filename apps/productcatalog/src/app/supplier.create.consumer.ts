@@ -7,10 +7,10 @@ import { RabbitConsumer } from '@org/rabbitmq';
 import { ProductCatalogService } from './productcatalog.service';
 
 @Injectable()
-export class SupplierConsumer extends RabbitConsumer {
+export class SupplierCreateConsumer extends RabbitConsumer {
 
   protected exchange = 'supplier.events';
-  protected queue = 'productcatalog.products';
+  protected queue = 'productcatalog.product-proposals';
   protected routingKey = 'supplier.product.proposed';
 
   constructor(
@@ -23,4 +23,5 @@ export class SupplierConsumer extends RabbitConsumer {
   protected async handle(event: SupplierProductProposedEvent) {
     await this.productCatalog.createProduct(event);
   }
+  
 }
