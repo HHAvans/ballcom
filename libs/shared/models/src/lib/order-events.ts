@@ -9,3 +9,10 @@ export interface OrderReleasedEvent {
   customerId: string;
   createdAt: string;
 }
+
+export interface SupplierProductProposedEvent {
+  productId: string;
+  productName: string;
+  description: string;
+  price: number;
+}
