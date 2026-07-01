@@ -83,6 +83,17 @@
         "watchDepsTargetName": "watch-deps",
         "serveStaticTargetName": "serve-static"
       }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      },
+      "exclude": [
+        "warehouse-e2e/**/*",
+        "apps-e2e/**/*",
+        "apps/warehouse-e2e/**/*"
+      ]
     }
   ],
   "generators": {
