@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity('products')
-export class Product {
+// Voorgestelde producten, zodat we ze later kunnen verwijderen.
+@Entity('supplier_products')
+export class SupplierProduct {
   @PrimaryColumn('uuid')
   productId!: string;
 
@@ -9,7 +10,7 @@ export class Product {
   supplierId!: string;
 
   @Column()
-  name!: string;
+  productName!: string;
 
   @Column({ type: 'text' })
   description!: string;

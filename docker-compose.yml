@@ -90,3 +90,44 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+
+  supplier:
+    build:
+      context: .
+      dockerfile: apps/supplier/Dockerfile
+    ports:
+      - '3006:3006'
+    environment:
+      PORT: 3006
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: supplierdb
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+
+  customer:
+    build:
+      context: .
+      dockerfile: apps/customer/Dockerfile
+    ports:
+      - '3005:3005'
+    environment:
+      PORT: 3005
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: customerdb
+      CUSTOMER_IMPORT_URL: 'https://avans.blob.core.windows.net/solution-architecture/fake_customer_data_export.csv?sv=2023-01-03&st=2025-05-28T06%3A44%3A43Z&se=2026-05-29T06%3A44%3A00Z&sr=b&sp=r&sig=x%2FPUVuEkWDUURcgGvUl4rsQ6dm6DA5PQ217dfQDXXnE%3D'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_started
