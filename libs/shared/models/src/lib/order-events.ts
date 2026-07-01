@@ -6,9 +6,16 @@ export interface ShipmentCreatedEvent {
 
 export interface OrderReleasedEvent {
   orderId: string;
-  amount: number;
+  products: [Product];
   customerId: string;
   createdAt: string;
+}
+
+export interface Product {
+  id: string;
+  productId: string
+  quantity: number
+  price: number
 }
 
 export interface SupplierProductProposedEvent {

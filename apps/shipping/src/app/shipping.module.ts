@@ -7,7 +7,7 @@ import { Shipment } from '@org/models';
 import { ShippingController } from './shipping.controller';
 import { ShippingService } from './shipping.service';
 import { ShippingPublisher } from './shipping.publisher';
-import { OrderConsumer } from './order.consumer';
+import { WarehouseConsumer } from './warehouse.consumer';
 
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { OrderConsumer } from './order.consumer';
   providers: [
     ShippingService,
     ShippingPublisher,
-    OrderConsumer,
+    WarehouseConsumer,
   ],
 })
 export class ShippingModule {}

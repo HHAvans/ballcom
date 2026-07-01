@@ -6,9 +6,11 @@ import { AppService } from './app.service';
 import { PaymentConsumer } from './payment.consumer';
 import { WarehousePublisher } from './warehouse.publisher';
 import { FulfilmentOrderEntity } from './fulfilment.entity';
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
+    HttpModule, // Used to get all orders when receiving payment completed info
     RabbitMqModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

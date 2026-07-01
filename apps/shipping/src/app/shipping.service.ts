@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Shipment } from '@org/models';
+import { ParcelPackedEvent, Shipment } from '@org/models';
 import { ShippingPublisher } from './shipping.publisher';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ShippingService {
     private readonly publisher: ShippingPublisher,
   ) {}
 
-  async createShipment(order: any) {
+  async createShipment(order: ParcelPackedEvent) {
     console.log('Creating shipment for', order.orderId);
 
     const shipment = this.shipmentRepository.create({

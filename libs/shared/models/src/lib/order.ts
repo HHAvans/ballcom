@@ -7,7 +7,7 @@ import {
 
 import { OrderItem } from './order-item';
 
-@Entity('orders')
+@Entity('order')
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -22,11 +22,11 @@ export class Order {
 
   @OneToMany(
     () => OrderItem,
-    item => item.order,
+    product => product.order,
     {
       cascade: true,
       eager: true,
     },
   )
-  items!: OrderItem[];
+  products!: OrderItem[];
 }

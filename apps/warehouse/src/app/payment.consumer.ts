@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { RabbitConsumer } from '@org/rabbitmq';
 import { PaymentCompletedEvent } from '@org/models';
 import { AppService } from './app.service';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class PaymentConsumer extends RabbitConsumer {
@@ -12,6 +14,7 @@ export class PaymentConsumer extends RabbitConsumer {
   constructor(
     channel: any,
     private readonly appService: AppService,
+    private readonly http: HttpService,
   ) {
     super(channel);
     console.log('--- WAREHOUSE PAYMENT CONSUMER STARTED ---');
@@ -22,12 +25,12 @@ export class PaymentConsumer extends RabbitConsumer {
     
     // Alleen verwerken als de betaling succesvol is afgerond
     if (event.status === 'COMPLETED') {
-      // Pragmatische picklijst vulling aangezien de order-events geen producten bevatten
-      const mockItems = ['CatalogProduct: Snelkoker XL', 'CatalogProduct: Ball.com Voetbal'];
+      
+      const orderWithProducts = await (await firstValueFrom(this.http.get('http://localhost:3001/api/order'))).data
       
       this.appService.createFulfilmentOrder(
         event.orderId, 
-        mockItems
+        orderWithProducts.products
       );
     }
   }

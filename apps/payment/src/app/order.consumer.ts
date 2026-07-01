@@ -23,11 +23,18 @@ export class OrderConsumer extends RabbitConsumer {
   protected async handle(
     event: OrderReleasedEvent,
   ) {
+
+    // get total amount as total of all products of an order price total
+    let totalSum = 0
+    for (const product of event.products) {
+      totalSum += product.quantity * product.price
+    }
+
     await this.commandBus.execute(
       new CreatePaymentCommand(
         event.orderId,
         event.customerId,
-        event.amount,
+        totalSum,
         'EUR',
       ),
     );
