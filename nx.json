@@ -92,7 +92,8 @@
       "exclude": [
         "warehouse-e2e/**/*",
         "apps-e2e/**/*",
-        "apps/warehouse-e2e/**/*"
+        "apps/warehouse-e2e/**/*",
+        "apps/customer-support-e2e/**/*"
       ]
     }
   ],

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RabbitConsumer } from '@org/rabbitmq';
 import { PaymentCompletedEvent } from '@org/models';
-import { AppService, FulfilmentStatus } from './app.service';
+import { AppService } from './app.service';
 
 @Injectable()
 export class PaymentConsumer extends RabbitConsumer {
