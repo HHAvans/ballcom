@@ -35,6 +35,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      postgres:
+        condition: service_started
 
   shipping:
     build:
@@ -43,12 +45,18 @@ services:
     ports:
       - '3002:3002'
     environment:
-      PORT: 3002
+      PORT: 3002:3002
       RABBITMQ_URL: amqp://rabbitmq
       DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: shippingdb
     depends_on:
-      - rabbitmq
-      - postgres
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_started
 
   productcatalog:
     build:
