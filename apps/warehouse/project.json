@@ -66,5 +66,5 @@
       }
     }
   },
-  "tags": ["type:app"]
+  "tags": ["type:app", "type:lib"]
 }

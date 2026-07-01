@@ -26,11 +26,13 @@ export class PaymentConsumer extends RabbitConsumer {
     // Alleen verwerken als de betaling succesvol is afgerond
     if (event.status === 'COMPLETED') {
       
-      const orderWithProducts = await (await firstValueFrom(this.http.get('http://localhost:3001/api/order'))).data
-      
-      this.appService.createFulfilmentOrder(
-        event.orderId, 
-        orderWithProducts.products
+      const { data: order } = await firstValueFrom(
+        this.http.get(`http://order:3001/api/order/${event.orderId}`),
+      );
+
+      await this.appService.createFulfilmentOrder(
+        order.id,
+        order.products,
       );
     }
   }

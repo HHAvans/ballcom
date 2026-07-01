@@ -15,6 +15,7 @@ export interface Product {
   id: string;
   productId: string
   quantity: number
+  name: string
   price: number
 }
 

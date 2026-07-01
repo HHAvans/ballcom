@@ -16,6 +16,9 @@ export class OrderItem {
   productId!: string;
 
   @Column()
+  name!: string;
+
+  @Column()
   quantity!: number;
 
   @Column()

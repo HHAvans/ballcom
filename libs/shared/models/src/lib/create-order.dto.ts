@@ -35,6 +35,9 @@ export class OrderProductDto {
   @Min(1)
   quantity!: number;
 
+  @IsString()
+  name!: string
+  
   @IsInt()
   @Min(1)
   price!: number;

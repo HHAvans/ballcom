@@ -31,4 +31,10 @@ export class AppService {
   async findAll() {
     return this.orderRepository.find();
   }
+
+  async findOne(id: string) {
+    return this.orderRepository.findOne({
+      where: { id },
+    });
+  }
 }
