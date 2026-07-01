@@ -106,3 +106,16 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+        
+  customer-support:
+    build:
+      context: .
+      dockerfile: apps/customer-support/Dockerfile
+    ports:
+      - '3008:3008'
+    environment:
+      PORT: 3008
+      DB_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_started

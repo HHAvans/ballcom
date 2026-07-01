@@ -1,63 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { FulfilmentOrderEntity } from './fulfilment.entity';
 import { WarehousePublisher } from './warehouse.publisher';
-
-export enum FulfilmentStatus {
-  WORDT_KLAARGEMAAKT = 'Wordt klaargemaakt voor verzending',
-  VERPAKT = 'verpakt',
-  VERZONDEN = 'verzonden',
-}
-
-export interface FulfilmentOrder {
-  id: string;
-  orderId: string;
-  status: FulfilmentStatus;
-  products: string[];
-  packedAt?: string;
-}
 
 @Injectable()
 export class AppService {
-  // In-memory state tracking voor snelle en foutloze oplevering
-  private fulfilmentOrders = new Map<string, FulfilmentOrder>();
+  constructor(
+    @InjectRepository(FulfilmentOrderEntity)
+    private readonly repo: Repository<FulfilmentOrderEntity>,
+    private readonly publisher: WarehousePublisher,
+  ) {}
 
-  constructor(private readonly publisher: WarehousePublisher) {}
-
-  // Gestart via de RabbitMQ consumer (R8)
-  createFulfilmentOrder(orderId: string, products: string[]): FulfilmentOrder {
-    const fulfilment: FulfilmentOrder = {
-      id: crypto.randomUUID(),
-      orderId,
-      status: FulfilmentStatus.WORDT_KLAARGEMAAKT, // Acceptatiecriterium
-      products,
-    };
-    
-    this.fulfilmentOrders.set(fulfilment.id, fulfilment);
-    console.log(`[Warehouse] Picklijst aangemaakt voor order ${orderId}. Status: ${fulfilment.status}`);
-    return fulfilment;
+  async createFulfilmentOrder(orderId: string, products: string[]): Promise<FulfilmentOrderEntity> {
+    const fulfilment = this.repo.create({ orderId, products, status: 'Wordt klaargemaakt voor verzending' });
+    return await this.repo.save(fulfilment);
   }
 
-  findAll(): FulfilmentOrder[] {
-    return Array.from(this.fulfilmentOrders.values());
+  async findAll(): Promise<FulfilmentOrderEntity[]> {
+    return await this.repo.find();
   }
 
-  // Acceptatiecriterium: Handmatig packen door magazijnmedewerker via HTTP / UI
-  async packOrder(id: string): Promise<FulfilmentOrder | { error: string }> {
-    const fulfilment = this.fulfilmentOrders.get(id);
-    if (!fulfilment) {
-      return { error: 'Fulfilment order niet gevonden' };
-    }
+  async packOrder(id: string) {
+    const fulfilment = await this.repo.findOneBy({ id });
+    if (!fulfilment) return { error: 'Niet gevonden' };
 
-    fulfilment.status = FulfilmentStatus.VERPAKT; // Acceptatiecriterium
+    fulfilment.status = 'verpakt';
     fulfilment.packedAt = new Date().toISOString();
+    await this.repo.save(fulfilment);
 
-    // R9: Event verzenden naar Shipping
     await this.publisher.parcelPacked({
       parcelId: crypto.randomUUID(),
       orderId: fulfilment.orderId,
       packedAt: fulfilment.packedAt,
     });
 
-    console.log(`[Warehouse] Order ${fulfilment.orderId} succesvol verpakt. Event R9 verzonden.`);
     return fulfilment;
   }
 }
