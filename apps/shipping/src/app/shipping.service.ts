@@ -1,32 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Shipment } from '@org/models';
 import { ShippingPublisher } from './shipping.publisher';
 
 @Injectable()
 export class ShippingService {
-    
-    constructor(
-        private readonly publisher: ShippingPublisher,
-    ) {}
+  constructor(
+    @InjectRepository(Shipment)
+    private readonly shipmentRepository: Repository<Shipment>,
+    private readonly publisher: ShippingPublisher,
+  ) {}
 
   async createShipment(order: any) {
+    console.log('Creating shipment for', order.orderId);
 
-    console.log(
-      'Creating shipment for',
-      order.orderId,
-    );
-
-    const shipment = {
-      shipmentId: randomUUID(),
+    const shipment = this.shipmentRepository.create({
       orderId: order.orderId,
-      carrier: carrier,
+      carrier: carrier.name,
       status: 'CREATED',
-    };
+    });
 
-    // submit to rabbitmq as event
-    await this.publisher.shipmentCreated(shipment)
-    
-    console.log(shipment);
+    await this.shipmentRepository.save(shipment);
+
+    await this.publisher.shipmentCreated({
+      shipmentId: shipment.id,
+      orderId: shipment.orderId,
+      carrier: shipment.carrier,
+      status: shipment.status,
+    });
+
+    return shipment;
+  }
+
+  async findAll() {
+    return this.shipmentRepository.find();
   }
 }
 

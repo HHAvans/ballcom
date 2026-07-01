@@ -1,6 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+import { OrderItem } from './order-item';
+
+@Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -8,6 +15,18 @@ export class Order {
   @Column()
   customerId!: string;
 
-  @Column()
+  @Column({
+    default: 'PENDING',
+  })
   status!: string;
+
+  @OneToMany(
+    () => OrderItem,
+    item => item.order,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
+  items!: OrderItem[];
 }
