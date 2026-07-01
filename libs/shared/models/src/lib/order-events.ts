@@ -23,3 +23,18 @@ export interface SupplierProductDeletedEvent {
   productId: string;
   supplierId: string;
 }
+
+export interface PaymentCompletedEvent {
+  paymentId: string;
+  orderId: string;
+  customerId: string;
+  amount: number;
+  currency: string;
+  status: string;
+}
+
+export interface ParcelPackedEvent {
+  parcelId: string;
+  orderId: string;
+  packedAt: string;
+}

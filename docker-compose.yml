@@ -90,3 +90,19 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+        
+  warehouse:
+    build:
+      context: .
+      dockerfile: apps/warehouse/Dockerfile
+    ports:
+      - '3007:3007'
+    environment:
+      PORT: 3007
+      RABBITMQ_URL: amqp://rabbitmq
+      DB_HOST: postgres
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_started
